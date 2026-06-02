@@ -16,7 +16,9 @@ public class ExerciseSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sessionId;
+    @ManyToOne
+    @JoinColumn(name = "session_exercise_id")
+    private SessionExercise sessionExercise;
 
     private int setNumber;
 

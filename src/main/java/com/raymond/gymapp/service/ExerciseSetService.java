@@ -6,6 +6,8 @@ import com.raymond.gymapp.repository.ExerciseSetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ExerciseSetService {
@@ -13,6 +15,7 @@ public class ExerciseSetService {
     private final ExerciseSetRepository exerciseSetRepository;
 
     public ExerciseSet createExerciseSet(ExerciseSet exerciseSet) {
+
         return exerciseSetRepository.save(exerciseSet);
     }
     public ExerciseSet getExerciseSetById(Long id) {
@@ -22,5 +25,10 @@ public class ExerciseSetService {
     public void deleteExerciseSet(Long id) {
         exerciseSetRepository.deleteById(id);
     }
+
+    public List<ExerciseSet> getSetsBySessionExerciseId(Long sessionExerciseId) {
+        return exerciseSetRepository.findBySessionExercise_Id(sessionExerciseId);
+    }
+
 
 }

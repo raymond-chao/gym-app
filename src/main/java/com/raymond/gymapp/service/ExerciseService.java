@@ -5,6 +5,8 @@ import com.raymond.gymapp.repository.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ExerciseService {
@@ -23,4 +25,7 @@ public class ExerciseService {
         exerciseRepository.deleteById(id);
     }
 
+    public List<Exercise> getAllExercises() {
+        return exerciseRepository.findAll();
+    }
 }

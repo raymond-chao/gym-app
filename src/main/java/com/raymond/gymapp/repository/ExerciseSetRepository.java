@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ExerciseSetRepository extends JpaRepository<ExerciseSet, Long> {
-    List<ExerciseSet> findBySessionExerciseId(Long sessionExerciseId);
+    List<ExerciseSet> findBySessionExercise_Id(Long sessionExerciseId);
 }
