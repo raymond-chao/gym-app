@@ -1,7 +1,7 @@
 package com.raymond.gymapp.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,9 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
+    @Value("${jwt.secret}")
+    private String secret;
+
     public String generateToken(String username) {
         return Jwts.builder()
                 .subject(username)
@@ -22,8 +25,9 @@ public class JwtUtil {
                 .signWith(getSigningKey())
                 .compact();
     }
-    private SecretKey getSigningKey()  {
-        return Keys.hmacShaKeyFor(Jwts.SIG.HS256.key().build().getEncoded());
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
     public String extractUsername(String token) {
         return Jwts.parser()

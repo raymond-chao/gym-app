@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
+
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
