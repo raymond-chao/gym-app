@@ -6,17 +6,36 @@ function Login() {
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await api.post("/auth/login", { username, password });
-            localStorage.setItem("token", response.data);
-            navigate("/dashboard");
-        } catch (err) {
-            setError("Fel användarnamn eller lösenord");
+        setError("");
+
+        if (isLoginMode) {
+            //login
+            try {
+                const response = await api.post("/auth/login", { username, password });
+                localStorage.setItem("token", response.data);
+                navigate("/dashboard");
+            } catch (err) {
+                setError("Fel användarnamn eller lösenord");
+            }
+        } else {
+            // signup
+            if (password !== confirmPassword) {
+                setError("Lösenorden matchar inte");
+                return;
+            }
+            try {
+                await api.post("/auth/register", { username, password });
+                setIsLoginMode(true);
+                setError("");
+            } catch (err) {
+                setError("Kunde inte registrera");
+            }
         }
     };
 
@@ -32,6 +51,7 @@ function Login() {
             {/* Tab Controls */}
             <div className="relative flex h-12 mb-6 border border-gray-300 rounded-full overflow-hidden">
                 <button
+                    type="button"
                     className={`w-1/2 text-lg font-medium transition-all z-10 ${
                         isLoginMode ? "text-white" : "text-black"
                     }`}
@@ -40,6 +60,7 @@ function Login() {
                     Login
                 </button>
                 <button
+                    type="button"
                     className={`w-1/2 text-lg font-medium transition-all z-10 ${
                         !isLoginMode ? "text-white" : "text-black"
                     }`}
@@ -55,16 +76,16 @@ function Login() {
             </div>
 
             {/* Form Section */}
-            <form className="space-y-4" onSubmit={handleLogin}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 {/* Signup-only Field */}
-                {!isLoginMode && (
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        required
-                        className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-yellow-400 placeholder-gray-400"
-                    />
-                )}
+                {/*{!isLoginMode && (*/}
+                {/*    <input*/}
+                {/*        type="text"*/}
+                {/*        placeholder="Name"*/}
+                {/*        required*/}
+                {/*        className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-yellow-400 placeholder-gray-400"*/}
+                {/*    />*/}
+                {/*)}*/}
 
                 {/* Shared Fields */}
                 <input
@@ -90,6 +111,8 @@ function Login() {
                         type="password"
                         placeholder="Confirm Password"
                         required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-yellow-400 placeholder-gray-400"
                     />
                 )}
